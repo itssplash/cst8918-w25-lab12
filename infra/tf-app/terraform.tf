@@ -17,7 +17,7 @@ terraform {
     container_name       = "tfstate"
     key                  = "prod.app.tfstate"
     use_oidc             = true
-    access_key           = secrets.ARM_ACCESS_KEY # Reference ARM access key dynamically
+    access_key           = "clHg+NlOqRxk+mrMhhqLJ5pLnVzG3/x8IWLinzue1cAHvI8kgjkgSWzSXp6EKzmfoN0XeCAnsbYG+AStY5Iu0g==" # Reference ARM access key dynamically
   }
 }
 
