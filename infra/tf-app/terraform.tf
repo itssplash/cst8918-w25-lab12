@@ -8,13 +8,14 @@ terraform {
     container_name       = "tfstate"
     key                  = "prod.app.tfstate"
     use_oidc             = true
-    access_key           = "clHg+NlOqRxk+mrMhhqLJ5pLnVzG3/x8IWLinzue1cAHvI8kgjkgSWzSXp6EKzmfoN0XeCAnsbYG+AStY5Iu0g==" # Reference ARM access key dynamically
+    # access_key           = "clHg+NlOqRxk+mrMhhqLJ5pLnVzG3/x8IWLinzue1cAHvI8kgjkgSWzSXp6EKzmfoN0XeCAnsbYG+AStY5Iu0g==" # Reference ARM access key dynamically
   }
 }
 
 provider "azurerm" {
   features {}
   subscription_id = "454cef6e-c0dd-444f-9766-2fcc4e902f67"
+  tenant_id = "e39de75c-b796-4bdd-888d-f3d21250910c"
   use_oidc        = true
 }
 
@@ -25,4 +26,5 @@ resource "azurerm_resource_group" "app_rg" {
 
 output "resource_group_name" {
   value = azurerm_resource_group.app_rg.name
+  description = "The name of the Azure resource group."
 }
