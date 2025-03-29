@@ -8,7 +8,6 @@ terraform {
     container_name       = "tfstate"
     key                  = "prod.app.tfstate"
     use_oidc             = true
-    # access_key           = "clHg+NlOqRxk+mrMhhqLJ5pLnVzG3/x8IWLinzue1cAHvI8kgjkgSWzSXp6EKzmfoN0XeCAnsbYG+AStY5Iu0g==" # Reference ARM access key dynamically
   }
 }
 
