@@ -1,0 +1,56 @@
+name: Terraform CI/CD
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  tflint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: '1.5'
+
+      - name: Run Terraform init
+        run: terraform init
+
+      - name: Run Terraform plan
+        run: terraform plan
+
+      - name: Run tflint
+        uses: wata727/tflint-action@v1
+        with:
+          config_file: .tflint.hcl
+
+      - name: Publish Terraform plan result to GitHub PR
+        uses: github/terraform-action@v2
+        with:
+          command: plan
+
+  terraform_deploy:
+    runs-on: ubuntu-latest
+    needs: tflint  # Ensures terraform plan has completed successfully
+    environment: production  # Use the production environment
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: '1.5'
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform apply
+        run: terraform apply -auto-approve

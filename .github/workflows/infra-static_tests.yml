@@ -1,0 +1,29 @@
+name: Static Code Analysis
+
+on:
+  push:
+    branches:
+      - '**'  # Trigger on all branches
+
+jobs:
+  static_analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: '1.5'
+
+      - name: Terraform fmt check
+        run: terraform fmt -check -diff -write=false
+
+      - name: Terraform validate
+        run: terraform validate
+
+      - name: Run Checkov for security issues
+        uses: bridgecrewio/checkov-action@v3
+        with:
+          scan: terraform
