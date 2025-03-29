@@ -1,0 +1,33 @@
+name: Daily Drift Detection
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Run once a day at midnight UTC
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  detect_drift:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: '1.5'
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform refresh (detect drift)
+        run: terraform refresh
+
+      - name: Check for drift and create issue if found
+        run: |
+          if terraform show -json | jq -e '.resources | length > 0' > /dev/null; then
+            echo "Drift detected, creating issue..."
+            gh issue create --title "Drift detected in infrastructure" --body "Configuration drift has been detected in the deployed infrastructure." --assignee @me
+          else
+            echo "No drift detected."
+          fi
